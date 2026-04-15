@@ -15,8 +15,15 @@
 - [x] **Phase 0 source spike (2026-04-14):** проверка GSC API и Google Transparency Report как кандидатов на primary source. Результат — GSC отвергнут (URL Inspection / Search Analytics не различают DMCA-removals), GTR подтверждён через network probe реального тестового домена. Найдены 5 undocumented v3 endpoints, протестированы curl без auth/cookies/referer, schema documented в SPEC §6.
 - [x] **Pivot декада 2026-04-14:** primary source v1 → GTR public undocumented JSON API. Lumen → optional secondary enrichment (по-прежнему требует researcher token, но больше не gate). GSC out of v1 entirely.
 - [x] **SPEC.md / AGENTS.md / CLAUDE.md / ROADMAP.md / PRIVACY.md / MANIFESTO.md / STORE.md обновлены под новую модель**
-- [ ] Phase 2: code surface migration (gtr-client primary impl, lumen-client stays stub, source enums, welcome wizard 3 steps, complaint card UX, sender drawer GTR-native)
-- [ ] Landing page на dmca.cam (новое позиционирование: retrospective audit + pattern detection)
+- [x] **Phase 2 — code surface migration (2026-04-14):** `gtr-client.ts` primary implementation с position-based extractor, `background.ts` switched to GTR primary loop, welcome wizard 4→3 шагов с freshness disclaimer, settings drawer Lumen toggle в Advanced, sender drawer GTR-native aggregation с cross-watchlist, complaint card counts + optional URL list. `npm run check` и оба builds зелёные.
+- [x] **Phase 3 — code review fixes (2026-04-15):** pagination loop + overlap-stop + **union-merge** в `mergeComplaints` (closed silent history truncation), **Top Contributors card** на Current Site computed локально из `record.complaints`, copy walked back from "complete history" to "historical audit". Deleted unused `lumen-request-template.ts`.
+- [x] **Phase 4 — real pagination contract fix (2026-04-15):** live-sniff SPA через Chrome automation, реальный контракт `/requests/summary/page?p=<cursor>` с next cursor at `wrapper[2][1]`. Verified 3-page walk против zippyshare.com. SPEC §6 Q2 исправлен.
+- [x] **Public GitHub repo (2026-04-15):** [github.com/investblog/dmca-watch](https://github.com/investblog/dmca-watch) под investblog account, MIT license, homepage https://dmca.cam, 10 topics, initial commit + 2 follow-up commits.
+- [x] **Beta release v0.1.0-beta.1 (2026-04-15):** via GitHub Actions CI, auto-prerelease detection, 29s runtime, 4 zips (chrome-mv3 55 kB, edge-mv3 55 kB, firefox-mv2 55 kB, sources 191 kB).
+- [ ] **Live smoke test on real domains** — user-side manual gate перед v1.0 stable
+- [ ] **CI Node.js 20 → 24 migration** — GitHub Actions deprecation, deadline 2026-06-02, one-line fix
+- [ ] **Lumen re-ask letter** — draft в `temp/lumen-reask-2026-04-15.txt`, user personalizes + sends; leans на Lumen's own 2022 abuse research и now-public repo
+- [ ] Landing page на dmca.cam (domain registered, копия в MANIFESTO.md и STORE.md)
 
 ---
 
@@ -24,14 +31,14 @@
 
 Базовый мониторинг DMCA-жалоб против собственных доменов через публичный Google Transparency Report API. Никаких токенов и аккаунтов для базовой работы. Lumen secondary enrichment — opt-in для пользователей с researcher token.
 
-**Source-coupled core (Phase 2 work):**
+**Source-coupled core — DONE (Phase 2 + Phase 3 + Phase 4):**
 
-- [ ] `shared/gtr-client.ts` — primary client с position-based extractor против всех 5 v3 endpoints (`domains/detail`, `requests/summary`, `reporters/summary`, `owners/summary`, `overview/urlsremoved`). Defensive parser с graceful degradation на schema breakage.
-- [x] `shared/lumen-client.ts` — secondary client, остаётся typed stub (`NotImplementedError`) до реального tokened sample. Активируется только когда `lumen_enabled === true` И токен валиден.
-- [ ] Type updates: `ComplaintSource = 'gtr' | 'lumen'`, `Complaint.urls_removed/urls_total`, `lumen_enabled` storage key, `SourceUsageMap` без gsc.
-- [ ] `background.ts` — переключение с Lumen-only flow на GTR primary + опциональный Lumen secondary enrichment. GTR никогда не gate'ит UI, нет invalid состояния.
-- [ ] Messaging protocol — `VERIFY_TOKEN` → `VERIFY_LUMEN_TOKEN`, новый `SET_LUMEN_ENABLED`.
-- [ ] Manifest `host_permissions` — добавить `https://transparencyreport.google.com/*`. Lumen + Archive.org остаются (для optional secondary).
+- [x] `shared/gtr-client.ts` — primary client с position-based extractor против 5 v3 endpoints. **Pagination contract live-verified 2026-04-15:** `/requests/summary/page?p=<cursor>`, next cursor at `wrapper[2][1]`. `fetchGtrComplaintsPage` + `searchGtrComplaintsByDomain` с overlap-stop loop. Defensive errors (`GtrNetworkError`, `GtrRateLimitedError`, `GtrParseError`).
+- [x] `shared/lumen-client.ts` — secondary client, stays typed stub (`NotImplementedError`) до реального tokened sample. Активируется только когда `lumen_enabled === true` И токен валиден.
+- [x] Type updates: `ComplaintSource = 'gtr' | 'lumen'`, `Complaint.urls_removed/urls_total`, `lumen_enabled` storage key, `SenderProfile.source` discriminant, `cross_watchlist` field, `SourceUsageMap` без gsc.
+- [x] `background.ts` — GTR primary flow (pagination with `knownKeys` overlap-stop), Lumen secondary enrichment когда активен. **`mergeComplaints` UNION, не replace** (post-Phase 3 fix — дropping previous complaints destroys history). GTR никогда не gate'ит UI.
+- [x] Messaging protocol — `VERIFY_LUMEN_TOKEN` rename, новый `SET_LUMEN_ENABLED`, никакого gsc.
+- [x] Manifest `host_permissions` — `transparencyreport.google.com/*`, `lumendatabase.org/*`, `archive.org/*`. Убран `https://*/*` (source health v1.x feature, Lumen-only).
 
 **Infrastructure (already in place from initial scaffolding):**
 
@@ -45,19 +52,19 @@
 - [x] Real icons (SVG + 4 PNG sizes через resvg-js)
 - [x] GitHub Actions release pipeline
 
-**UX adaptations (Phase 2 work):**
+**UX adaptations — DONE (Phase 2 + Phase 3):**
 
-- [ ] Welcome wizard rewrite: 3 шага без token entry — приветствие с честным freshness disclaimer, первый домен, готово. Lumen-explainer убрать с главных шагов в Settings → Advanced.
-- [x] Side panel: Watchlist + Current Site (2 tabs, Current Site default) — skeleton готов
-- [ ] Side panel: complaint card UX — counts as default UX, URL list только когда Lumen secondary enriched
-- [ ] Side panel: freshness disclaimer tooltip над `last_checked` (см. SPEC §16 Q9)
+- [x] Welcome wizard rewrite: 3 шага без token entry — приветствие с freshness disclaimer, первый домен, готово. Lumen explainer только в Settings → Advanced.
+- [x] Side panel: Watchlist + Current Site (2 tabs, Current Site default)
+- [x] Side panel: complaint card UX — counts as default UX, URL list только когда Lumen secondary enriched, link либо на GTR либо на Lumen notice page
+- [x] Side panel: freshness disclaimer tooltip над `last_checked` (SPEC §16 Q9 option B)
+- [x] **Top Contributors card на Current Site (Phase 3):** top-5 reporters + top-5 copyright owners aggregated локально, each clickable → opens Sender drawer
 - [x] Dispute drawer: counter-notice шаблоны (DMCA 17 U.S.C. §512(g))
-- [ ] Settings drawer rewrite: GTR source status (always-on) + Lumen toggle в Advanced section с explainer
-- [x] **Sender forensics drawer (skeleton)** — total notices, activity sparkline, top principals/recipients/targets/sources, jurisdictions, source health check, dossier JSON export
-- [ ] Sender forensics drawer adaptation: GTR-native fields by default (`reporters/summary`, `owners/summary`, `overview/urlsremoved`); Lumen-only sections отображаются только когда secondary активен
-- [x] Browser notifications на новые жалобы (infra ready, live after gtr-client wiring)
-- [x] Disabled/gated states for missing or invalid Lumen secondary access (UI surface — apply only to Lumen, not to GTR)
-- [x] i18n-ready English (Lumen request email template was kept; will be moved into Lumen-secondary explainer)
+- [x] Settings drawer rewrite: GTR source status (always-on) + Lumen toggle в Advanced section с explainer about Lumen's formal denial
+- [x] **Sender forensics drawer (GTR-native):** local aggregation из `record.complaints`, cross_watchlist killer feature («Also in your watchlist»), monthly sparkline из local dates. Lumen-only sections скрыты когда `source === 'gtr'`.
+- [x] Browser notifications на новые жалобы
+- [x] Disabled/gated states only for Lumen secondary (not for GTR — GTR never gates)
+- [x] i18n-ready English, Lumen application template removed from welcome (file deleted in Phase 3)
 
 **Documentation (Phase 1 work, in progress):**
 

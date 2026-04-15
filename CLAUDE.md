@@ -2,7 +2,15 @@
 
 ## Snapshot
 
-v0.1.0 — skeleton up, build green. **Phase 0 source spike done 2026-04-14: pivoted from Lumen-primary to GTR-primary. Phase 1 doc rewrite + Phase 2 code migration complete same day.** Google Transparency Report's undocumented v3 JSON API is the v1 primary source — public, no auth, schema and position-based extractor live in `src/shared/gtr-client.ts`. `background.ts` switched to GTR primary loop; welcome wizard shrunk from 4 steps (with Lumen token form) to 3 steps (with honest freshness disclaimer); settings drawer exposes Lumen as opt-in Advanced toggle only. `npm run check` and `npm run build` both pass for chrome-mv3 and firefox-mv2. **Lumen Database formally declined 2026-04-14** the "monitor own domains" use case — researcher credentials only for journalism/academic/policy research — confirming the pivot was right. Lumen remains v1 optional secondary for existing token holders only; we do not steer users into researcher applications. Full denial text in `temp/lumen-denial-2026-04-14.txt`. `lumen-client.ts` stays a typed stub; real Lumen impl is v1.x Power Pack work. GSC ruled out for v1 (URL Inspection / Search Analytics don't expose DMCA removals; Messages inbox not in public API). Браузерное расширение для вебмастеров: **retrospective audit + pattern detection** для DMCA-жалоб против собственных доменов (не early-warning — данные GTR ~30-60 дней позади реального времени).
+**v0.1.0-beta.1 released 2026-04-15** via GitHub Actions CI. Repo public at [github.com/investblog/dmca-watch](https://github.com/investblog/dmca-watch) (MIT), 4 browser zips uploaded (chrome-mv3 / edge-mv3 / firefox-mv2 / sources), auto-detected as prerelease via tag-name rule. `npm run check` and both builds pass clean. Phases 0–4 all done in two calendar days (2026-04-14 and 2026-04-15):
+
+- **Phase 0 (research spike):** pivoted from Lumen-primary to GTR-primary after GSC API audit ruled out DMCA signal and Phase 0 probes verified Google Transparency Report's undocumented v3 JSON API (`transparencyreport.google.com/transparencyreport/api/v3/copyright/`) as a public, no-auth, stable source. Sender Forensics reinstated in v1 as GTR-native cross-watchlist aggregation.
+- **Phase 1 (doc rewrite):** SPEC, AGENTS, ROADMAP, CLAUDE, PRIVACY, MANIFESTO, STORE, README all rewritten under new model and honest *retrospective audit + pattern detection* positioning with explicit 30–60 day freshness disclosure. **Lumen formally declined** the webmaster use case 2026-04-14 (full text in `temp/lumen-denial-2026-04-14.txt`), confirming the pivot was correct.
+- **Phase 2 (code migration):** `src/shared/gtr-client.ts` written with position-based extractor, `background.ts` switched to GTR primary loop, welcome wizard 4→3 steps with freshness disclaimer, settings drawer Lumen toggle in Advanced, sender drawer GTR-native aggregation, complaint card UX changed from URL list to counts-with-optional-URL-list-when-Lumen-enriched, manifest host_permissions updated to `transparencyreport.google.com/* + lumendatabase.org/* + archive.org/*`.
+- **Phase 3 (code review fixes):** pagination loop + overlap-stop + union-merge (fixed silent history truncation on refresh), Top Contributors card on Current Site computed locally from `record.complaints`, copy walked back from "complete history" to "historical audit". `lumen-request-template.ts` deleted.
+- **Phase 4 (real pagination contract fix):** Phase 3's first pagination attempt used the wrong endpoint suffix and wrong cursor index. Live-sniffed the GTR SPA's own pagination traffic via Chrome automation — real contract is `/requests/summary/page?p=<cursor>` (NOT `?start=`) with next cursor at `wrapper[2][1]` (NOT `[2]`). Verified end-to-end with 3-page walk against zippyshare.com returning 9 unique entry IDs. SPEC §6 Q2 updated to reflect the corrected contract and why.
+
+Browser extension for webmasters: **retrospective audit + pattern detection** for DMCA complaints against their own domains — not early warning (GTR data is ~30–60 days behind real time, and this is stated honestly throughout the UI). `lumen-client.ts` stays a typed stub; real Lumen impl is v1.x Power Pack work reserved for users who already hold a researcher token from a different research context. GSC ruled out for v1 (URL Inspection / Search Analytics don't expose DMCA removals; Messages inbox not in public API) and parked as v2 research track.
 
 Repo: [github.com/investblog/dmca-watch](https://github.com/investblog/dmca-watch) | Landing: [dmca.cam](https://dmca.cam)
 
@@ -154,28 +162,23 @@ DMCA Monitor — **отдельный продукт**, не fork. Но боль
 - Telegram bot token (dmcacheckbot) в `temp/tg-bot-token.txt` (gitignored)
 - Always build after changes before responding (project-wide rule)
 
-## Next code step (Phase 2 — code surface migration)
+## Next steps (post-beta)
 
-Phase 1 (docs rewrite) is in progress and currently being executed. Phase 2 begins after Phase 1 ships and the user gives a go.
+Phases 0–4 are all done. Repo is public, `v0.1.0-beta.1` is live with all 4 browser zips, CI workflow is verified working, GTR pagination contract is live-verified. No pending code work blocks the release.
 
-**Phase 2 code work, in dependency order:**
+**What remains before v1.0 stable:**
 
-1. `shared/types/index.ts` — `ComplaintSource = 'gtr' | 'lumen'` (drop `'gsc'`), add `Complaint.urls_removed` and `Complaint.urls_total` fields, adapt `SenderProfile` for GTR-native vs Lumen-only fields, add `lumen_enabled` to settings types.
-2. `shared/constants.ts` — add `LUMEN_ENABLED` storage key, split `BUDGET` into GTR + Lumen sections, drop GSC from default excluded list (already not present), update `THROTTLE_MS` strategy (now per-source).
-3. `shared/db.ts` — getter/setter for `lumen_enabled`, source_usage map split (gtr / lumen).
-4. `shared/messaging/protocol.ts` — rename `VERIFY_TOKEN` → `VERIFY_LUMEN_TOKEN`, add `SET_LUMEN_ENABLED`, drop any `gsc` references.
-5. **`shared/gtr-client.ts`** — new primary client. Endpoints documented in SPEC §6. Position-based extractor for `requests/summary` entries. Defensive parser with graceful degradation on schema breakage. Implementation no longer blocked — Phase 0 spike confirmed all endpoints work without auth.
-6. `shared/lumen-client.ts` — stays a typed stub. Phase 0 pivot moved its real implementation to v1.x.
-7. `entrypoints/background.ts` — switch from Lumen-only flow to GTR primary + optional Lumen secondary enrichment. Remove gating-on-missing-token logic for the main monitor loop. Lumen status only affects Lumen-specific UI in Settings.
-8. `entrypoints/welcome/` — rewrite from 4 steps (with Lumen token form) to 3 steps (welcome with freshness disclaimer → first domain → done). Lumen explainer moves to Settings → Advanced.
-9. `entrypoints/sidepanel/components/settings-drawer.ts` — Lumen toggle in Advanced section with explainer; GTR source status as always-on indicator.
-10. `entrypoints/sidepanel/components/sender-drawer.ts` — adapt to GTR-native data (`reporters/summary`, `owners/summary`, `overview/urlsremoved`); Lumen-only sections show only when secondary active.
-11. `entrypoints/sidepanel/main.ts` — complaint card UX: counts as default, URL list only when Lumen-enriched. Freshness tooltip on `last_checked` displays.
-12. `wxt.config.ts` — `host_permissions` add `https://transparencyreport.google.com/*`, keep `lumendatabase.org` and `archive.org` (for optional secondary).
-13. `_locales/en/messages.json` — copy strings updated for new positioning, freshness disclaimer, GTR primary, Lumen optional explainer.
-14. `npm run check && npm run build` — must pass cleanly.
+1. **Live smoke test on real domains** (user-side, manual). Load `dmca-watch-0.1.0-chrome.zip` (or firefox/edge equivalent) from the v0.1.0-beta.1 release page as unpacked extension, add 2–3 real domains, verify end-to-end: pagination actually walks multiple pages, union-merge preserves history across refreshes, Top Contributors card populates from local complaints, Sender drawer's "Also in your watchlist" cross-reference works with multi-domain portfolio. This is the last validation gate before calling v1.0 done — cannot be done from Claude Code.
+2. **Node.js 20 → 24 CI migration.** GitHub Actions annotated v0.1.0-beta.1's run with a deprecation warning. Hard deadline 2026-06-02. One-line change in `.github/workflows/release.yml`.
+3. **Lumen re-ask letter send** (user-side). Draft in `temp/lumen-reask-2026-04-15.txt`. User needs to fill in `[Your name]`/`[Your email]` and send to team@lumendatabase.org. The letter reframes the ask as a public research-output commitment (dashboard on dmca.cam + periodic reports on DMCA abuse patterns), anchored on Lumen's own 2022 research (33,988 fraudulent notices, today-news.press back-dated technique — real and verified).
+4. **Landing page on dmca.cam.** Domain is registered and homepage is linked from the GitHub repo, but the page itself is empty. Copy is ready in MANIFESTO.md and STORE.md.
+5. **Store submissions** — Chrome Web Store, Firefox AMO, Microsoft Edge Add-ons. Requires store screenshots (SPEC lists 7 ideas), finalized listing copy per locale (currently EN-only), PRIVACY.md legal review, and developer account registration with each store. This is Phase 5.
+6. **v1.0 stable tag.** After smoke test passes + at least one store submission is accepted, tag `v0.1.0` (no pre-release suffix) for the stable release. CI workflow auto-detects non-prerelease from the clean tag name.
+7. **v1.1 polish items** — see ROADMAP.md: bulk add domains, manifest i18n 14 locales, export/import, local search/filter, relative time auto-refresh, inspector card refinement, GTR endpoint stability monitoring (SPEC §16 Q10), sender drawer cross-reference navigation expansion.
 
-**Discovery items in Phase 2:**
-- Verify GTR `domain=` param accepts both Unicode and punycode for IDN — if not, only send punycode.
-- Probe `requests/summary?reporter_id=X` (or similar) for sender-specific notice samples — currently SPEC §10 sender drawer assumes this works but it was not probed in Phase 0.
-- Confirm that GTR API does not require any specific User-Agent or fail on extension-typical UA strings.
+**Known gotchas that future code changes must preserve:**
+
+- **GTR pagination contract:** subsequent pages use endpoint path `/requests/summary/page` (NOT `/requests/summary`) and param `p=<cursor>` (NOT `?start=`). Next cursor is at `paginationMeta[1]` (NOT `[2]` — that's the *last-page* cursor). End-of-list detected by `entries.length < size` OR `currentPage >= totalPages` OR `nextCursor === cursor`. Live-verified 2026-04-15 against zippyshare.com 3-page walk. See `src/shared/gtr-client.ts: fetchGtrComplaintsPage` and SPEC §6 Q2.
+- **mergeComplaints is a UNION, not a replace.** Previous complaints that are absent from the latest fetch must stay in local storage — silently dropping them destroys the historical audit value. See `src/entrypoints/background.ts: mergeComplaints`. The overlap-stop strategy in the GTR client relies on this being correct.
+- **Sender Forensics is local aggregation, not an API call.** GTR API does not accept any per-sender filter (probed `reporter_id`, `owner_id`, several aliases — all return empty or unchanged). The "Also in your watchlist" cross-reference is computed from `record.complaints` across all watchlist domains. This ended up being the killer feature because it's actionable — don't try to replace it with a "global stats" API call that doesn't exist.
+- **No "Request Lumen researcher access" CTA anywhere in the UI.** Lumen declined the webmaster use case in writing 2026-04-14. The Settings → Advanced Lumen toggle is explicitly documented as being only for users who already hold a token obtained for journalism/academic/policy research. See AGENTS.md §8 and `temp/lumen-denial-2026-04-14.txt`.
