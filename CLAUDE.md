@@ -4,7 +4,7 @@
 
 v0.1.0 — skeleton up, build green. **Phase 0 source spike done 2026-04-14: pivoted from Lumen-primary to GTR-primary. Phase 1 doc rewrite + Phase 2 code migration complete same day.** Google Transparency Report's undocumented v3 JSON API is the v1 primary source — public, no auth, schema and position-based extractor live in `src/shared/gtr-client.ts`. `background.ts` switched to GTR primary loop; welcome wizard shrunk from 4 steps (with Lumen token form) to 3 steps (with honest freshness disclaimer); settings drawer exposes Lumen as opt-in Advanced toggle only. `npm run check` and `npm run build` both pass for chrome-mv3 and firefox-mv2. **Lumen Database formally declined 2026-04-14** the "monitor own domains" use case — researcher credentials only for journalism/academic/policy research — confirming the pivot was right. Lumen remains v1 optional secondary for existing token holders only; we do not steer users into researcher applications. Full denial text in `temp/lumen-denial-2026-04-14.txt`. `lumen-client.ts` stays a typed stub; real Lumen impl is v1.x Power Pack work. GSC ruled out for v1 (URL Inspection / Search Analytics don't expose DMCA removals; Messages inbox not in public API). Браузерное расширение для вебмастеров: **retrospective audit + pattern detection** для DMCA-жалоб против собственных доменов (не early-warning — данные GTR ~30-60 дней позади реального времени).
 
-Repo: TBD | Landing: [dmca.cam](https://dmca.cam)
+Repo: [github.com/investblog/dmca-watch](https://github.com/investblog/dmca-watch) | Landing: [dmca.cam](https://dmca.cam)
 
 Sibling product in the 301.st webmaster toolkit line. Sponsored by 301.st.
 

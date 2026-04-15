@@ -112,7 +112,7 @@ Everything we build stays free, open source, and aligned with webmasters — not
 ## Get involved
 
 - **Install:** Chrome Web Store · Firefox Add-ons · Microsoft Edge Add-ons _(links live at launch)_
-- **Source:** github.com/investblog/dmca-watch _(when public)_
+- **Source:** [github.com/investblog/dmca-watch](https://github.com/investblog/dmca-watch)
 - **Contact:** hello@dmca.cam
 - **Part of:** [301.st](https://301.st) — the webmaster toolkit line
 
