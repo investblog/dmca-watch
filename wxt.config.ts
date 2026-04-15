@@ -1,0 +1,98 @@
+import { defineConfig } from 'wxt';
+import { resolve } from 'node:path';
+
+export default defineConfig({
+  srcDir: 'src',
+  outDir: 'dist',
+
+  vite: () => ({
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, 'src'),
+        '@shared': resolve(__dirname, 'src/shared'),
+      },
+    },
+  }),
+
+  manifest: ({ browser }) => ({
+    name: '__MSG_extName__',
+    description: '__MSG_extDesc__',
+    default_locale: 'en',
+    homepage_url: 'https://dmca.cam',
+    author: 'DMCA Watch <support@301.st>',
+
+    permissions: (browser === 'firefox')
+      ? ['storage', 'alarms', 'tabs', 'activeTab', 'notifications']
+      : ['storage', 'alarms', 'tabs', 'activeTab', 'sidePanel', 'notifications'],
+
+    host_permissions: [
+      'https://transparencyreport.google.com/*',
+      'https://lumendatabase.org/*',
+      'https://archive.org/*',
+    ],
+
+    content_security_policy: browser === 'firefox'
+      ? "script-src 'self'; object-src 'self'"
+      : undefined,
+
+    icons: {
+      16: 'icons/icon-16.png',
+      32: 'icons/icon-32.png',
+      48: 'icons/icon-48.png',
+      128: 'icons/icon-128.png',
+    },
+
+    action: {
+      default_icon: {
+        16: 'icons/icon-16.png',
+        32: 'icons/icon-32.png',
+        48: 'icons/icon-48.png',
+        128: 'icons/icon-128.png',
+      },
+      default_title: '__MSG_extName__',
+    },
+
+    ...(browser === 'firefox' && {
+      browser_specific_settings: {
+        gecko: {
+          id: 'dmca-watch@301.st',
+          strict_min_version: '142.0',
+        },
+        gecko_android: {
+          strict_min_version: '142.0',
+        },
+      },
+    }),
+  }),
+
+  hooks: {
+    'build:manifestGenerated': (wxt, manifest) => {
+      // Chrome/Edge: remove popup, icon click opens sidePanel via onClicked
+      if (wxt.config.browser !== 'firefox') {
+        if (manifest.action) {
+          delete manifest.action.default_popup;
+        }
+        const sp = (manifest as unknown as Record<string, any>).side_panel;
+        if (sp) sp.default_path = 'sidepanel.html#sidebar';
+      }
+
+      // Firefox: sidepanel.html doubles as popup + sidebar
+      if (wxt.config.browser === 'firefox') {
+        if (manifest.browser_specific_settings?.gecko) {
+          (manifest.browser_specific_settings.gecko as Record<string, unknown>)
+            .data_collection_permissions = { required: ['none'] };
+        }
+        if (manifest.action) {
+          manifest.action.default_popup = 'sidepanel.html';
+        }
+        const sidebar = (manifest as unknown as Record<string, any>).sidebar_action;
+        if (sidebar) {
+          sidebar.default_icon = 'icons/icon-48.png';
+          sidebar.default_panel = 'sidepanel.html#sidebar';
+        }
+      }
+    },
+  },
+
+  browser: 'chrome',
+});

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.output/
+.wxt/
+*.log
+.DS_Store
+Thumbs.db
+temp/
+*.zip
+.env
+.env.local

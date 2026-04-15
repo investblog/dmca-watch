@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title data-i18n="panelTitle">DMCA Watch</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="../../assets/css/theme.css" />
+  <link rel="stylesheet" href="../../assets/css/components.css" />
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="ico-shield" viewBox="0 0 20 20"><path fill="currentColor" d="M10 1 3 4.5v5c0 4.7 3 8.3 7 9.5 4-1.2 7-4.8 7-9.5v-5z"/></symbol>
+    <symbol id="ico-globe" viewBox="0 0 20 20"><path fill="currentColor" d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0"/></symbol>
+    <symbol id="ico-cog" viewBox="0 0 20 20"><path fill="currentColor" d="M9.73 13.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46a.49.49 0 0 0-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98L12.23.42a.506.506 0 0 0-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L2.3 9c-.04.34-.07.67-.07 1s.03.65.07.97L.19 12.63c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z"/></symbol>
+    <symbol id="ico-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="ico-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></g></symbol>
+    <symbol id="ico-auto" viewBox="0 0 24 24"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"/></symbol>
+    <symbol id="ico-pause" viewBox="0 0 24 24"><path fill="currentColor" d="M14,19H18V5H14M6,19H10V5H6V19Z"/></symbol>
+    <symbol id="ico-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z"/></symbol>
+  </svg>
+
+  <div class="panel">
+    <header class="panel__header">
+      <div class="panel__header-left">
+        <img class="panel__brand-icon" src="/icons/icon-32.png" alt="" />
+        <h1 class="panel__title" data-i18n="panelTitle">DMCA Watch</h1>
+      </div>
+      <div class="panel__actions">
+        <button class="btn-icon" type="button" id="btnPause" title="Pause checking">
+          <svg width="16" height="16"><use id="pauseIcon" href="#ico-pause"/></svg>
+        </button>
+        <button class="btn-icon" type="button" id="btnOpenSettings" title="Settings">
+          <svg width="16" height="16"><use href="#ico-cog"/></svg>
+        </button>
+        <button class="btn-icon" type="button" id="btnToggleTheme" title="Toggle theme">
+          <svg width="16" height="16"><use id="themeIcon" href="#ico-moon"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <nav class="panel__nav">
+      <button class="nav-tab is-active" data-tab="current">
+        <svg class="nav-tab__icon"><use href="#ico-globe"/></svg>
+        <span data-i18n="tabCurrent">Current Site</span>
+      </button>
+      <button class="nav-tab" data-tab="watchlist">
+        <svg class="nav-tab__icon"><use href="#ico-shield"/></svg>
+        <span data-i18n="tabWatchlist">Watchlist</span>
+      </button>
+    </nav>
+
+    <main class="panel__body">
+      <section class="view" data-view-content="current">
+        <div id="currentSiteInfo"></div>
+      </section>
+
+      <section class="view" data-view-content="watchlist" hidden>
+        <div class="domain-form">
+          <div class="domain-form__row">
+            <input id="addDomainInput" class="input input--sm" placeholder="example.com" data-i18n-placeholder="domainPlaceholder" />
+            <button id="btnAddDomain" class="btn btn--primary btn--sm" type="button" data-i18n="addBtn">Add</button>
+          </div>
+          <div id="addDomainError" class="inline-msg"></div>
+        </div>
+        <div id="watchlistContainer" class="domain-list"></div>
+      </section>
+    </main>
+
+    <footer class="panel__footer" id="panelFooter">
+      <div class="panel__footer-badges">
+        <span class="panel__footer-badge" id="footerCount" title="Domains">0</span>
+        <span class="panel__footer-badge panel__footer-badge--queue" id="footerQueue" title="Queue" hidden>0</span>
+        <span class="panel__footer-badge panel__footer-badge--tokens" id="footerUsage" title="GTR requests today">0</span>
+      </div>
+      <div class="panel__footer-links"></div>
+      <a href="https://301.st/?utm_source=dmca-watch&utm_medium=extension" class="panel__sponsor" target="_blank" rel="noreferrer" title="301.st">301.st</a>
+    </footer>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>
