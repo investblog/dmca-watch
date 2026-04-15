@@ -23,13 +23,17 @@ jobs:
       - run: npx wxt prepare
       - run: npm run check
       - run: npm run zip:all
+      - name: List build artifacts
+        run: ls -la dist/*.zip
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
             dist/*-chrome.zip
             dist/*-firefox.zip
             dist/*-edge.zip
             dist/*-sources.zip
-          generate_release_notes: true

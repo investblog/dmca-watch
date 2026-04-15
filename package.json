@@ -1,7 +1,7 @@
 {
   "name": "dmca-watch",
   "version": "0.1.0",
-  "description": "DMCA Watch — monitor DMCA complaints filed against your domains via Lumen Database: watchlist with scheduled checks, counter-notice templates, and badge indicator",
+  "description": "DMCA Watch — historical audit of DMCA complaints filed against your domains via Google Transparency Report: watchlist with paginated fetch, sender forensics with cross-portfolio pattern detection, counter-notice templates. Optional Lumen Database secondary enrichment.",
   "type": "module",
   "scripts": {
     "dev": "wxt",
