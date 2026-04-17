@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMCA Watch — Audit DMCA complaint history against your domains</title>
+  <meta name="description" content="Browser extension for webmasters: retrospective audit and pattern detection for DMCA complaints via Google Transparency Report. Watchlist, sender forensics, counter-notice templates. Free, open source, no account required.">
+
+  <!-- OG -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://dmca.cam/">
+  <meta property="og:title" content="DMCA Watch — Audit DMCA complaint history against your domains">
+  <meta property="og:description" content="Browser extension for webmasters: retrospective audit and pattern detection for DMCA complaints via Google Transparency Report.">
+  <meta property="og:image" content="https://dmca.cam/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Theme color -->
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/landing.css">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "DMCA Watch",
+      "url": "https://dmca.cam/"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "DMCA Watch",
+      "applicationCategory": "BrowserExtension",
+      "operatingSystem": "Chrome, Firefox, Edge",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Browser extension for webmasters to audit DMCA complaint history against their domains via Google Transparency Report. Watchlist, sender forensics, counter-notice templates.",
+      "url": "https://dmca.cam/",
+      "license": "https://opensource.org/licenses/MIT",
+      "author": { "@type": "Organization", "name": "301.st", "url": "https://301.st" },
+      "downloadUrl": "https://github.com/investblog/dmca-watch/releases"
+    }
+  ]
+  </script>
+
+  <link rel="canonical" href="https://dmca.cam/">
+</head>
+<body>
+
+<!-- SVG Sprite -->
+<svg xmlns="http://www.w3.org/2000/svg" hidden>
+  <!-- DMCA Watch logo -->
+  <symbol id="i-dmca-logo" viewBox="0 0 152 152">
+    <path d="M101.548 4.327c-.871.118-1.585.157-2.485.333a26.44 26.44 0 0 0-14.585 8.04C74.843 23.007 72.251 38.568 70.98 52.109c-.314 3.333-.372 6.687-.51 10.03a302 302 0 0 0 .324 32.073c.166 3.128.489 6.364.782 9.482.127 1.421.343 2.784.392 4.216-.44.794-1.302 1.843-1.869 2.588a241 241 0 0 1-3.688 4.697 305 305 0 0 1-11.111 13.02c-4.705 5.148-9.459 10.002-13.782 15.512-2.064-.931-6.222-3.53-8.07-4.736-2.994-2.108-5.39-3.824-8.149-6.304A75.64 75.64 0 0 1 1.675 91.779 87 87 0 0 1 .051 78.356c-.146-2.765.05-5.236.235-8.001a74.25 74.25 0 0 1 19.202-45.231A75.87 75.87 0 0 1 63.105 1.09C67.028.433 70.265.257 74.227.06c2.514-.176 5.077.07 7.571.207 6.867.382 13.255 1.862 19.75 4.059" fill="url(#logo-a)"/>
+    <path d="M146.251 105.105c-1.057 2.588-2.622 5.892-4.128 8.265-.48.755-2.475 2.775-3.228 3.462-6.564 6.039-14.477 11.364-22.616 15.07-1.33.598-4.118 1.412-5.566 1.647a17.93 17.93 0 0 1-13.596-3.245c-7.024-5.148-9.107-11.776-10.056-20.062.176-.176.195-.186.323-.402 1.007-1 3.071-4.353 3.912-5.667a481 481 0 0 0 5.253-8.168c11.396-18.15 28.289-45.937 28.358-67.744.019-4.118-.323-8.785-2.309-12.472.978.696 2.015 1.618 2.925 2.422a72 72 0 0 1 6.123 5.883c10.614 11.492 16.806 24.337 19.408 39.75a77 77 0 0 1-4.803 41.261" fill="url(#logo-b)"/>
+    <path d="M110.567 29.8c-.108 11.13-4.96 22.621-9.518 32.583a213 213 0 0 1-8.657 17.228 177 177 0 0 1-4.118 6.942c-.352.559-2.035 3.412-2.152 3.422l-.235.059c-.215-.079-.685-.255-.792-.765-.01-3.922-.48-7.854-.558-11.786-.108-5.334-.176-10.707.01-16.041.068-1.97.264-3.942.391-5.913.206-3.186.411-6.363.783-9.53.939-7.835 3.345-20.973 9.028-26.68 2.055-2.06 4.745-3.148 7.66-3.148 1.79 0 3.658.402 4.969 1.716 2.7 2.706 3.228 8.256 3.189 11.914" fill="url(#logo-c)"/>
+    <path d="M105.421 146.09c-14.105 5.688-28.475 7.423-43.43 4.55-2.221-.431-5.616-1.147-7.738-1.843-.127-.334-.04-.579.185-.844 1.243-1.451 2.573-2.843 3.835-4.275l10.828-12.236a338 338 0 0 0 3.463-3.942c.665-.765 2.035-2.432 2.788-2.991 2.015 5.109 4.373 9.05 8.452 12.806 3.971 3.706 8.588 6.207 13.87 7.452 2.945.696 4.647.765 7.659.608.088.353.098.353.098.715z" fill="url(#logo-e)"/>
+    <path d="M105.323 146.375c.578-.069 1.321-.147 1.869-.265-.519.333-1.203.814-1.771.98 0-.362 0-.362-.098-.715" fill="#28387d"/>
+    <defs>
+      <linearGradient id="logo-a" x1="89.34" y1="93.142" x2="18.477" y2="26.165" gradientUnits="userSpaceOnUse"><stop stop-color="#317d58"/><stop offset="1" stop-color="#47b05c"/></linearGradient>
+      <linearGradient id="logo-b" x1="145.576" y1="110.497" x2="87.385" y2="49.236" gradientUnits="userSpaceOnUse"><stop stop-color="#2f2e7b"/><stop offset="1" stop-color="#236080"/></linearGradient>
+      <linearGradient id="logo-c" x1="109.804" y1="69.139" x2="78.506" y2="33.591" gradientUnits="userSpaceOnUse"><stop stop-color="#204d81"/><stop offset="1" stop-color="#296880"/></linearGradient>
+      <linearGradient id="logo-e" x1="91.111" y1="159.249" x2="66.476" y2="132.922" gradientUnits="userSpaceOnUse"><stop stop-color="#2f2e7b"/><stop offset="1" stop-color="#23417e"/></linearGradient>
+    </defs>
+  </symbol>
+
+  <!-- Mono icons -->
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v4.7c0 4.83-3.13 9.37-7 10.5-3.87-1.13-7-5.67-7-10.5V6.3l7-3.12z"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></symbol>
+  <symbol id="i-alarm" viewBox="0 0 24 24"><path d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
+  <symbol id="i-trending" viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></symbol>
+  <symbol id="i-description" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></symbol>
+  <symbol id="i-no-track" viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></symbol>
+  <symbol id="i-no-server" viewBox="0 0 24 24"><path d="M2 5c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V5zm2 0v4h16V5H4zm-2 8c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-4zm2 0v4h16v-4H4zm2-6h2v2H6V7zm0 8h2v2H6v-2z"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/></symbol>
+  <symbol id="i-telegram" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.66-.52.36-1 .54-1.42.53-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.37-.49 1.02-.74 3.99-1.74 6.65-2.89 7.99-3.45 3.81-1.58 4.6-1.86 5.12-1.87.11 0 .37.03.54.17.14.12.18.28.2.45-.01.06.01.24 0 .38z"/></symbol>
+  <symbol id="i-theme" viewBox="0 0 24 24"><path d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></symbol>
+  <symbol id="i-open-in-new" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></symbol>
+  <symbol id="i-no-key" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></symbol>
+</svg>
+
+<!-- ========================= NAV ========================= -->
+<nav class="nav" aria-label="Main navigation">
+  <div class="container nav__inner">
+    <a href="#" class="nav__logo" aria-label="DMCA Watch">
+      <svg class="nav__logo-icon icon--brand" aria-hidden="true"><use href="#i-dmca-logo"></use></svg>
+      DMCA Watch
+    </a>
+
+    <ul class="nav__links">
+      <li><a href="#transparency">Approach</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#audience">Who It's For</a></li>
+      <li><a href="#privacy">Privacy</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+
+    <div class="nav__actions">
+      <!-- Theme toggle -->
+      <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Toggle theme">
+        <svg class="icon" id="theme-icon-light" aria-hidden="true"><use href="#i-theme"></use></svg>
+        <svg class="icon" id="theme-icon-dark" hidden aria-hidden="true"><use href="#i-moon"></use></svg>
+      </button>
+
+      <!-- Mobile menu toggle -->
+      <button class="nav__mobile-toggle" type="button" id="mobile-toggle" aria-label="Menu">
+        <svg class="icon icon--lg" aria-hidden="true"><use href="#i-menu"></use></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="container">
+    <div class="nav__mobile-menu" id="mobile-menu">
+      <a href="#transparency">Approach</a>
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#audience">Who It's For</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#about">About</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+<!-- ========================= HERO ========================= -->
+<section class="hero">
+  <div class="container">
+    <div class="hero__badge">
+      <span class="badge">
+        <svg class="icon icon--sm" aria-hidden="true"><use href="#i-shield"></use></svg>
+        Free &amp; Open Source
+      </span>
+      <span class="badge badge--beta">v0.1.0 Beta</span>
+    </div>
+
+    <h1 class="text-display hero__title">Audit DMCA complaint history from your browser</h1>
+
+    <p class="text-lead hero__subtitle">Watchlist monitoring, sender forensics, and counter-notice templates &mdash; powered by Google Transparency Report. No account required.</p>
+
+    <div class="hero__cta">
+      <a href="https://github.com/investblog/dmca-watch/releases" class="btn btn--primary btn--lg" target="_blank" rel="noopener">
+        <svg class="icon" aria-hidden="true"><use href="#i-github"></use></svg>
+        Download Beta
+      </a>
+      <a href="https://github.com/investblog/dmca-watch" class="btn btn--ghost btn--lg" target="_blank" rel="noopener">
+        <svg class="icon" aria-hidden="true"><use href="#i-open-in-new"></use></svg>
+        Source Code
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= TRANSPARENCY ========================= -->
+<section class="section section--alt" id="transparency">
+  <div class="container">
+    <div class="disclosure">
+      <h2 class="disclosure__title">What this is, and what it is not</h2>
+      <p class="disclosure__text"><strong>DMCA Watch is not a real-time alert system.</strong> Google publishes copyright removal data through its Transparency Report, but that data is approximately 30&ndash;60 days behind real time. By the time a new complaint shows up in the dataset, the URL has already been gone from search results for one or two months. No tool built on public data can warn you before the damage.</p>
+      <p class="disclosure__text"><strong>What DMCA Watch is</strong> is the audit and pattern-detection tool that should already exist. It pulls DMCA requests against your domains from Google's Transparency Report, accumulates that history locally, and shows you who has been hitting you, how often, and how badly. It surfaces the repeat-offender reporters. It gives you the historical record you need to file informed counter-notices and recognize patterns before you waste another quarter wondering why your traffic is sliding.</p>
+      <p class="disclosure__text">If you want to know everything that has happened so far, and to see the pattern clearly, that is what this tool is for.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= FEATURES ========================= -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="text-title">Key Features</h2>
+      <p class="text-lead">Everything you need to audit DMCA activity against your domains.</p>
+    </div>
+
+    <div class="features__grid">
+      <div class="card">
+        <div class="card__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg>
+        </div>
+        <h3 class="card__title">Watchlist Monitoring</h3>
+        <p class="card__text">Add your domains to a watchlist. The extension checks them on a schedule against Google Transparency Report and accumulates complaint history over time.</p>
+      </div>
+
+      <div class="card">
+        <div class="card__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-person"></use></svg>
+        </div>
+        <h3 class="card__title">Sender Forensics</h3>
+        <p class="card__text">See who files against you: reporting organization, copyright owner, total complaints, monthly activity timeline, and which other domains in your watchlist they have targeted.</p>
+      </div>
+
+      <div class="card">
+        <div class="card__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+        </div>
+        <h3 class="card__title">Historical Audit</h3>
+        <p class="card__text">Full complaint history from Google Transparency Report, accumulated locally across refreshes. Once a complaint is stored it stays until you remove the domain.</p>
+      </div>
+
+      <div class="card">
+        <div class="card__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-description"></use></svg>
+        </div>
+        <h3 class="card__title">Counter-Notice Templates</h3>
+        <p class="card__text">DMCA &sect;512(g) counter-notice templates you can copy, edit, and submit. We don't file for you &mdash; counter-notices are legal documents you sign under penalty of perjury.</p>
+      </div>
+
+      <div class="card">
+        <div class="card__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-no-key"></use></svg>
+        </div>
+        <h3 class="card__title">No Account Required</h3>
+        <p class="card__text">No API key, no email exchange, no approval process. Install the extension, add your domains, look at the data. Google Transparency Report is a public source.</p>
+      </div>
+
+      <div class="card">
+        <div class="card__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-trending"></use></svg>
+        </div>
+        <h3 class="card__title">Pattern Detection</h3>
+        <p class="card__text">Top contributors card, repeat-offender reporters, cross-domain targeting analysis. See the pattern with your own eyes &mdash; we don't slap labels on anyone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= HOW IT WORKS ========================= -->
+<section class="section section--alt" id="how-it-works">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="text-title">How It Works</h2>
+      <p class="text-lead">Get started in seconds. No setup, no key, no account.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step__number">1</div>
+        <h3 class="step__title">Install extension</h3>
+        <p class="step__text">Add the extension from your browser's store or download the beta from GitHub.</p>
+      </div>
+      <div class="step">
+        <div class="step__number">2</div>
+        <h3 class="step__title">Add your domains</h3>
+        <p class="step__text">Add domains to the watchlist one by one or browse to any site and check it instantly.</p>
+      </div>
+      <div class="step">
+        <div class="step__number">3</div>
+        <h3 class="step__title">Review history</h3>
+        <p class="step__text">See every DMCA complaint filed against your domains, investigate senders, and draft counter-notices.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= AUDIENCE ========================= -->
+<section class="section" id="audience">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="text-title">Who It's For</h2>
+      <p class="text-lead">Built for domain operators, not general consumers.</p>
+    </div>
+
+    <div class="audience__grid">
+      <div class="audience__chip">
+        <svg class="icon" aria-hidden="true"><use href="#i-globe"></use></svg>
+        <span>Webmasters</span>
+      </div>
+      <div class="audience__chip">
+        <svg class="icon" aria-hidden="true"><use href="#i-globe"></use></svg>
+        <span>Site Owners</span>
+      </div>
+      <div class="audience__chip">
+        <svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg>
+        <span>Agencies</span>
+      </div>
+      <div class="audience__chip">
+        <svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg>
+        <span>SEO Specialists</span>
+      </div>
+      <div class="audience__chip">
+        <svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>
+        <span>Legal Operations</span>
+      </div>
+      <div class="audience__chip">
+        <svg class="icon" aria-hidden="true"><use href="#i-trending"></use></svg>
+        <span>Domain Portfolio Operators</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= PRIVACY ========================= -->
+<section class="section section--alt" id="privacy">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="text-title">Privacy First</h2>
+      <p class="text-lead">No backend, no analytics, no tracking. Your data stays in your browser.</p>
+    </div>
+
+    <div class="privacy__grid">
+      <div class="privacy__card">
+        <div class="privacy__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-no-key"></use></svg>
+        </div>
+        <span>No account or API key</span>
+      </div>
+      <div class="privacy__card">
+        <div class="privacy__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-lock"></use></svg>
+        </div>
+        <span>Data stored locally in browser</span>
+      </div>
+      <div class="privacy__card">
+        <div class="privacy__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-no-track"></use></svg>
+        </div>
+        <span>No analytics or telemetry</span>
+      </div>
+      <div class="privacy__card">
+        <div class="privacy__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-no-server"></use></svg>
+        </div>
+        <span>No third-party servers</span>
+      </div>
+      <div class="privacy__card">
+        <div class="privacy__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>
+        </div>
+        <span>Queries go directly to Google</span>
+      </div>
+      <div class="privacy__card">
+        <div class="privacy__icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>
+        </div>
+        <span>Open source under MIT license</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ABOUT ========================= -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="about">
+      <h2 class="text-title about__title">About the extension</h2>
+      <p class="about__lead">DMCA Watch gives webmasters a practical, browser-native way to audit the DMCA complaint history of their domains. Add your domains to a watchlist, let the extension check them on a schedule against Google Transparency Report, and review every removal action Google has acted on for your sites &mdash; who filed them, on whose behalf, how many URLs were targeted, and how many were actually removed.</p>
+      <details class="about__more">
+        <summary>Read more</summary>
+        <p>Google's Transparency Report has been public since 2011. Every copyright removal request Google has acted on for Search is in there, indexed by domain, by reporting organization, by copyright owner. But searching is not monitoring. Going to transparencyreport.google.com every morning to paste each of your domains into the search box is not a strategy, especially if you operate ten or fifty or two hundred domains.</p>
+        <p>This extension does not provide legal advice, does not submit counter-notices on your behalf, does not inject warnings into pages, and does not claim to offer real-time alerts. It is a focused monitoring and audit tool for people who manage sites and need an operational view of the takedown notices their domains have collected.</p>
+        <p>DMCA Watch is part of the <a href="https://301.st" target="_blank" rel="noopener">301.st</a> webmaster toolkit &mdash; the same line that produced VirusTotal Domain Monitor, Redirect Inspector, CookiePeek, and others. Tools built by operators for operators.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= BOTTOM CTA ========================= -->
+<section class="section section--alt bottom-cta">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="text-title">Start auditing today</h2>
+      <p class="text-lead">Download the beta &mdash; it's free, open source, and takes seconds to set up.</p>
+    </div>
+
+    <div class="hero__cta">
+      <a href="https://github.com/investblog/dmca-watch/releases" class="btn btn--primary btn--lg" target="_blank" rel="noopener">
+        <svg class="icon" aria-hidden="true"><use href="#i-github"></use></svg>
+        Download Beta
+      </a>
+      <a href="https://github.com/investblog/dmca-watch" class="btn btn--ghost btn--lg" target="_blank" rel="noopener">
+        <svg class="icon" aria-hidden="true"><use href="#i-open-in-new"></use></svg>
+        Source Code
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ========================= FOOTER ========================= -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <p class="footer__copy">&copy; 2026 DMCA Watch. MIT License.</p>
+    <ul class="footer__links">
+      <li><a href="https://github.com/investblog/dmca-watch" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://t.me/traffic301" target="_blank" rel="noopener">Telegram</a></li>
+      <li><a href="https://301.st" target="_blank" rel="noopener">301.st</a></li>
+    </ul>
+  </div>
+</footer>
+
+<!-- Inline JS: theme toggle + mobile menu -->
+<script>
+(function() {
+  // Theme
+  var root = document.documentElement;
+  var toggle = document.getElementById('theme-toggle');
+  var iconLight = document.getElementById('theme-icon-light');
+  var iconDark = document.getElementById('theme-icon-dark');
+
+  function getTheme() {
+    return localStorage.getItem('theme') ||
+      (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  }
+
+  function setTheme(t) {
+    root.dataset.theme = t;
+    localStorage.setItem('theme', t);
+    iconLight.hidden = (t === 'light');
+    iconDark.hidden = (t === 'dark');
+  }
+
+  setTheme(getTheme());
+
+  toggle.addEventListener('click', function() {
+    setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+  });
+
+  // Mobile menu
+  var mobileToggle = document.getElementById('mobile-toggle');
+  var mobileMenu = document.getElementById('mobile-menu');
+
+  mobileToggle.addEventListener('click', function() {
+    mobileMenu.classList.toggle('is-open');
+  });
+
+  mobileMenu.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A') mobileMenu.classList.remove('is-open');
+  });
+})();
+</script>
+
+</body>
+</html>
